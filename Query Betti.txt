@@ -1,0 +1,55 @@
+CREATE DATABASE viaggi;
+-- DROP TABLE SE SI ROMPE TUTTO
+DROP TABLE booking;
+DROP TABLE viaggio;
+DROP TABLE attrazione;
+DROP TABLE localita;
+DROP TABLE utente;
+
+-- UTENTI
+CREATE TABLE utente (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    username varchar(255) UNIQUE NOT NULL,
+    password varchar(255) NOT NULL,
+    role varchar(7) CHECK(role IN ('admin', 'cliente')) NOT NULL
+);
+
+-- LUOGHI
+CREATE TABLE localita (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    name varchar(255) NOT NULL,
+    country varchar(255) NOT NULL,
+    description varchar(255)
+);
+
+-- ATTRAZIONI
+CREATE TABLE attrazione (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    place_id INT NOT NULL,
+    name varchar(255) NOT NULL,
+    description varchar(255),
+    added_by INT NOT NULL,
+    FOREIGN KEY (place_id) REFERENCES localita(id),
+    FOREIGN KEY (added_by) REFERENCES utente(id)
+);
+
+-- VIAGGI
+CREATE TABLE viaggio (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    place_id INT NOT NULL,
+    start_date varchar(255) NOT NULL,
+    end_date varchar(255) NOT NULL,
+    price DECIMAL(5,2) NOT NULL,
+    description varchar(255),
+    FOREIGN KEY (place_id) REFERENCES localita(id)
+);
+
+-- PRENOTAZIONI
+CREATE TABLE booking (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    user_id INT NOT NULL,
+    trip_id INT NOT NULL,
+    booking_date date NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES utente(id),
+    FOREIGN KEY (trip_id) REFERENCES viaggio(id)
+);
